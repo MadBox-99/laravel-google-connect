@@ -1,9 +1,10 @@
 <?php
 
 declare(strict_types=1);
+use App\Models\Team;
 
 return [
-    'tenant_model' => \App\Models\Team::class,
+    'tenant_model' => Team::class,
     'tenant_table' => 'teams',
 
     'client_id' => env('GOOGLE_CLIENT_ID', env('GOOGLE_ADS_PROXY_CLIENT_ID', env('GOOGLE_ADS_CLIENT_ID'))),

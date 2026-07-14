@@ -25,7 +25,7 @@ final class GoogleOAuthService
         $base = mb_rtrim((string) config('google-connect.proxy_base_url'), '/');
         $returnPath = parse_url(route('google.oauth.callback'), PHP_URL_PATH) ?: '/google/auth/callback';
 
-        return $base . '/oauth/google/start?' . http_build_query([
+        return $base.'/oauth/google/start?'.http_build_query([
             'tenant' => mb_rtrim((string) config('app.url'), '/'),
             'return_path' => $returnPath,
             'state' => (string) $team->id,
@@ -39,7 +39,7 @@ final class GoogleOAuthService
 
         if (isset($token['error'])) {
             Log::error('Google OAuth error', $token);
-            throw new RuntimeException('OAuth error: ' . ($token['error_description'] ?? $token['error']));
+            throw new RuntimeException('OAuth error: '.($token['error_description'] ?? $token['error']));
         }
 
         $userInfo = $this->fetchUserInfo($token['access_token']);
@@ -74,7 +74,7 @@ final class GoogleOAuthService
         if (isset($token['error'])) {
             Log::error('Google OAuth token refresh error', $token);
             $settings->update(['is_connected' => false]);
-            throw new RuntimeException('Token refresh failed: ' . ($token['error_description'] ?? $token['error']));
+            throw new RuntimeException('Token refresh failed: '.($token['error_description'] ?? $token['error']));
         }
 
         $settings->update([
@@ -143,7 +143,7 @@ final class GoogleOAuthService
 
     private function getProxyCallbackUrl(): string
     {
-        return mb_rtrim((string) config('google-connect.proxy_base_url'), '/') . '/oauth/google/callback';
+        return mb_rtrim((string) config('google-connect.proxy_base_url'), '/').'/oauth/google/callback';
     }
 
     /**

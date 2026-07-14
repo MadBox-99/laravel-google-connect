@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use Google\Client;
 use Illuminate\Support\Facades\Http;
-use MadBox\GoogleConnect\Models\GoogleOAuthSettings;
 use MadBox\GoogleConnect\Services\GoogleOAuthService;
 use MadBox\GoogleConnect\Tests\Fixtures\Team;
 
@@ -13,8 +13,8 @@ it('builds a proxy authorization url carrying the tenant and team state', functi
     $url = app(GoogleOAuthService::class)->getAuthorizationUrl($team);
 
     expect($url)->toStartWith('https://proxy.test/oauth/google/start?')
-        ->and($url)->toContain('tenant=' . urlencode('https://tenant.test'))
-        ->and($url)->toContain('state=' . $team->id);
+        ->and($url)->toContain('tenant='.urlencode('https://tenant.test'))
+        ->and($url)->toContain('state='.$team->id);
 });
 
 it('persists tokens and identity on callback', function (): void {
@@ -24,11 +24,11 @@ it('persists tokens and identity on callback', function (): void {
         'https://openidconnect.googleapis.com/v1/userinfo' => Http::response(['email' => 'a@b.test', 'name' => 'A B']),
     ]);
 
-    $fakeClient = Mockery::mock(\Google\Client::class);
+    $fakeClient = Mockery::mock(Client::class);
     $fakeClient->shouldIgnoreMissing();
     $fakeClient->shouldReceive('fetchAccessTokenWithAuthCode')->with('the-code')
         ->andReturn(['access_token' => 'at', 'refresh_token' => 'rt', 'expires_in' => 3600]);
-    $this->app->instance(\Google\Client::class, $fakeClient);
+    $this->app->instance(Client::class, $fakeClient);
 
     $settings = app(GoogleOAuthService::class)->handleCallback('the-code', $team->id);
 

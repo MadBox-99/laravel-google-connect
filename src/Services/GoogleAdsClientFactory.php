@@ -40,13 +40,13 @@ final class GoogleAdsClientFactory
 
         $settings = $oauthService->refreshTokenIfNeeded($settings);
 
-        $oAuth2Credential = (new OAuth2TokenBuilder())
+        $oAuth2Credential = (new OAuth2TokenBuilder)
             ->withClientId((string) config('google-connect.client_id'))
             ->withClientSecret((string) config('google-connect.client_secret'))
             ->withRefreshToken($settings->refresh_token)
             ->build();
 
-        $builder = (new GoogleAdsClientBuilder())
+        $builder = (new GoogleAdsClientBuilder)
             ->withDeveloperToken($devToken)
             ->withOAuth2Credential($oAuth2Credential);
 

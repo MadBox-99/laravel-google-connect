@@ -21,7 +21,7 @@ final class GoogleClientFactory
         $oauthService = app(GoogleOAuthService::class);
         $settings = $oauthService->refreshTokenIfNeeded($settings);
 
-        $client = new Client();
+        $client = new Client;
         $client->setClientId((string) config('google-connect.client_id'));
         $client->setClientSecret((string) config('google-connect.client_secret'));
         $client->setScopes($scopes);
