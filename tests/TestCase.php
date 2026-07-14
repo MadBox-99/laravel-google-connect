@@ -11,7 +11,11 @@ abstract class TestCase extends Orchestra
 {
     protected function getPackageProviders($app): array
     {
-        return [GoogleConnectServiceProvider::class];
+        return [
+            \Filament\FilamentServiceProvider::class,
+            \Livewire\LivewireServiceProvider::class,
+            GoogleConnectServiceProvider::class,
+        ];
     }
 
     protected function defineEnvironment($app): void
