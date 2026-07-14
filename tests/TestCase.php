@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MadBox\GoogleConnect\Tests;
 
+use Illuminate\Routing\Router;
 use MadBox\GoogleConnect\GoogleConnectServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -31,5 +32,13 @@ abstract class TestCase extends Orchestra
     {
         $this->loadMigrationsFrom(__DIR__ . '/Fixtures/migrations');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+    }
+
+    /**
+     * @param  Router  $router
+     */
+    protected function defineRoutes($router): void
+    {
+        $router->get('google/auth/callback', fn () => null)->name('google.oauth.callback');
     }
 }
