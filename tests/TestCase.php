@@ -16,6 +16,9 @@ abstract class TestCase extends Orchestra
 
     protected function defineEnvironment($app): void
     {
+        $app['config']->set('app.key', 'base64:' . base64_encode(
+            \Illuminate\Encryption\Encrypter::generateKey($app['config']->get('app.cipher', 'AES-256-CBC'))
+        ));
         $app['config']->set('google-connect.tenant_model', \MadBox\GoogleConnect\Tests\Fixtures\Team::class);
         $app['config']->set('google-connect.client_id', 'test-client-id');
         $app['config']->set('google-connect.client_secret', 'test-client-secret');
