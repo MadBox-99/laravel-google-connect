@@ -7,14 +7,15 @@ use Illuminate\Support\Facades\Http;
 use MadBox\GoogleConnect\Services\GoogleOAuthService;
 use MadBox\GoogleConnect\Tests\Fixtures\Team;
 
-it('builds a proxy authorization url carrying the tenant and team state', function (): void {
+it('builds a proxy authorization url carrying the tenant and the given state', function (): void {
     $team = Team::query()->create(['name' => 'Acme']);
 
-    $url = app(GoogleOAuthService::class)->getAuthorizationUrl($team);
+    $url = app(GoogleOAuthService::class)->getAuthorizationUrl($team, 'nonce-123');
 
     expect($url)->toStartWith('https://proxy.test/oauth/google/start?')
         ->and($url)->toContain('tenant='.urlencode('https://tenant.test'))
-        ->and($url)->toContain('state='.$team->id);
+        ->and($url)->toContain('state=nonce-123')
+        ->and($url)->not->toContain('state='.$team->id.'&');
 });
 
 it('persists tokens and identity on callback', function (): void {

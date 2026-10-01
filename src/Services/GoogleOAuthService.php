@@ -20,7 +20,11 @@ use RuntimeException;
  */
 final class GoogleOAuthService
 {
-    public function getAuthorizationUrl(Model $team): string
+    /**
+     * $state must come from OAuthState::issue() — it is what ties the proxy's
+     * callback back to this browser session and team.
+     */
+    public function getAuthorizationUrl(Model $team, string $state): string
     {
         $base = mb_rtrim((string) config('google-connect.proxy_base_url'), '/');
         $returnPath = parse_url(route('google.oauth.callback'), PHP_URL_PATH) ?: '/google/auth/callback';
@@ -28,7 +32,7 @@ final class GoogleOAuthService
         return $base.'/oauth/google/start?'.http_build_query([
             'tenant' => mb_rtrim((string) config('app.url'), '/'),
             'return_path' => $returnPath,
-            'state' => (string) $team->id,
+            'state' => $state,
         ]);
     }
 
