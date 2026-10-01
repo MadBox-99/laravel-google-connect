@@ -20,6 +20,14 @@ return [
     'settings_route' => 'filament.admin.pages.settings',
     'dashboard_route' => 'filament.admin.pages.dashboard',
 
+    // Which resource selectors the component lists and renders. Apps that
+    // only read Analytics and Search Console drop 'ads'.
+    'resources' => ['ads', 'search_console', 'ga4'],
+
+    // null → the user's canAccessTenant($team) decides. A callable
+    // fn (Authenticatable $user, Model $team): bool replaces that check.
+    'authorize' => null,
+
     'scopes' => [
         'https://www.googleapis.com/auth/adwords',
         'https://www.googleapis.com/auth/webmasters.readonly',
