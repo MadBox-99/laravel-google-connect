@@ -11,35 +11,41 @@
             {{ __('Connected as :email', ['email' => $settings->connected_email ?? __('Connected')]) }}
         </div>
 
-        <div>
-            <label class="block text-sm font-medium">{{ __('Google Ads Account') }}</label>
-            <select wire:model.live="selectedAdsCustomerId" class="fi-input block w-full rounded-lg">
-                <option value="">{{ __('— Select —') }}</option>
-                @foreach ($options['ads'] as $account)
-                    <option value="{{ $account['id'] }}">{{ $account['name'] }}</option>
-                @endforeach
-            </select>
-        </div>
+        @if ($this->showsResource('ads'))
+            <div>
+                <label class="block text-sm font-medium">{{ __('Google Ads Account') }}</label>
+                <select wire:model.live="selectedAdsCustomerId" class="fi-input block w-full rounded-lg">
+                    <option value="">{{ __('— Select —') }}</option>
+                    @foreach ($options['ads'] as $account)
+                        <option value="{{ $account['id'] }}">{{ $account['name'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
 
-        <div>
-            <label class="block text-sm font-medium">{{ __('Search Console Property') }}</label>
-            <select wire:model.live="selectedSearchConsoleSiteUrl" class="fi-input block w-full rounded-lg">
-                <option value="">{{ __('— Select —') }}</option>
-                @foreach ($options['sites'] as $site)
-                    <option value="{{ $site['id'] }}">{{ $site['name'] }}</option>
-                @endforeach
-            </select>
-        </div>
+        @if ($this->showsResource('search_console'))
+            <div>
+                <label class="block text-sm font-medium">{{ __('Search Console Property') }}</label>
+                <select wire:model.live="selectedSearchConsoleSiteUrl" class="fi-input block w-full rounded-lg">
+                    <option value="">{{ __('— Select —') }}</option>
+                    @foreach ($options['sites'] as $site)
+                        <option value="{{ $site['id'] }}">{{ $site['name'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
 
-        <div>
-            <label class="block text-sm font-medium">{{ __('GA4 Property') }}</label>
-            <select wire:model.live="selectedGa4PropertyId" class="fi-input block w-full rounded-lg">
-                <option value="">{{ __('— Select —') }}</option>
-                @foreach ($options['properties'] as $property)
-                    <option value="{{ $property['property_id'] }}">{{ $property['property_name'] }}</option>
-                @endforeach
-            </select>
-        </div>
+        @if ($this->showsResource('ga4'))
+            <div>
+                <label class="block text-sm font-medium">{{ __('GA4 Property') }}</label>
+                <select wire:model.live="selectedGa4PropertyId" class="fi-input block w-full rounded-lg">
+                    <option value="">{{ __('— Select —') }}</option>
+                    @foreach ($options['properties'] as $property)
+                        <option value="{{ $property['property_id'] }}">{{ $property['property_name'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
 
         <button type="button" wire:click="disconnect"
                 class="fi-btn fi-btn-color-danger inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold">
