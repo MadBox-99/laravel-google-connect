@@ -22,6 +22,12 @@ final class TenantAuthorizer
 
         $callback = config('google-connect.authorize');
 
+        // A class name keeps the config cacheable; a closure would make
+        // `php artisan config:cache` refuse to run.
+        if (is_string($callback) && class_exists($callback)) {
+            $callback = app($callback);
+        }
+
         if (is_callable($callback)) {
             return (bool) $callback($user, $team);
         }

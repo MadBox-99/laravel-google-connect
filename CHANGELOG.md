@@ -8,10 +8,13 @@
   team from the session, so a forged or replayed callback can no longer attach a Google account to
   another team.
 - `redirect`, `callback` and `disconnect` (routes and the Livewire action) check that the logged-in
-  user may access the team. By default `canAccessTenant($team)` decides. Override it with the
-  `google-connect.authorize` config callable. Unauthorized requests get a 403.
+  user may access the team. By default `canAccessTenant($team)` decides. Override it by setting
+  `google-connect.authorize` to the class name of an invokable `__invoke($user, $team): bool`
+  (not a closure, which would break `config:cache`). Unauthorized requests get a 403.
 - The connect component only saves an Ads account, Search Console site or GA4 property that the
   connected Google account can actually see.
+- The cached Ads, Search Console and GA4 lists are cleared on connect and disconnect, so a newly
+  connected Google account never sees, or can select, the previous account's resources.
 
 ### Added
 

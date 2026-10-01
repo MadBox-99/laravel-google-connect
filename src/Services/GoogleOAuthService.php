@@ -48,7 +48,7 @@ final class GoogleOAuthService
 
         $userInfo = $this->fetchUserInfo($token['access_token']);
 
-        return GoogleOAuthSettings::query()->updateOrCreate(
+        $settings = GoogleOAuthSettings::query()->updateOrCreate(
             ['team_id' => $teamId],
             [
                 'access_token' => $token['access_token'],
@@ -59,6 +59,12 @@ final class GoogleOAuthService
                 'connected_name' => $userInfo['name'] ?? null,
             ],
         );
+
+        // A reconnect may be a different Google account; its resource lists
+        // must not be served from the previous account's cache.
+        app(GoogleResourceFetcher::class)->forgetCachedResources($settings);
+
+        return $settings;
     }
 
     public function refreshTokenIfNeeded(GoogleOAuthSettings $settings): GoogleOAuthSettings
@@ -105,6 +111,8 @@ final class GoogleOAuthService
                 Log::warning('Failed to revoke Google OAuth token', ['error' => $e->getMessage()]);
             }
         }
+
+        app(GoogleResourceFetcher::class)->forgetCachedResources($settings);
 
         $settings->update([
             'access_token' => null,

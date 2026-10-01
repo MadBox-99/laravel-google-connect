@@ -24,8 +24,10 @@ return [
     // only read Analytics and Search Console drop 'ads'.
     'resources' => ['ads', 'search_console', 'ga4'],
 
-    // null → the user's canAccessTenant($team) decides. A callable
-    // fn (Authenticatable $user, Model $team): bool replaces that check.
+    // null → the user's canAccessTenant($team) decides. To replace that
+    // check, give the class name of an invokable
+    // __invoke(Authenticatable $user, Model $team): bool. Not a closure:
+    // closures break `php artisan config:cache`.
     'authorize' => null,
 
     'scopes' => [

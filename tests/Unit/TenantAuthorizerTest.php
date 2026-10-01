@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Foundation\Auth\User as PlainUser;
 use MadBox\GoogleConnect\Support\TenantAuthorizer;
+use MadBox\GoogleConnect\Tests\Fixtures\AllowAcme;
 use MadBox\GoogleConnect\Tests\Fixtures\Team;
 use MadBox\GoogleConnect\Tests\Fixtures\User;
 
@@ -31,6 +32,13 @@ it('denies a user that has no canAccessTenant method', function (): void {
 it('lets a configured callable override the default', function (): void {
     $team = Team::query()->create(['name' => 'Acme']);
     config()->set('google-connect.authorize', fn ($user, $tenant): bool => $tenant->name === 'Acme');
+
+    expect(app(TenantAuthorizer::class)->allows(new User(['id' => 1, 'team_ids' => []]), $team))->toBeTrue();
+});
+
+it('accepts an invokable class name, which survives config:cache', function (): void {
+    $team = Team::query()->create(['name' => 'Acme']);
+    config()->set('google-connect.authorize', AllowAcme::class);
 
     expect(app(TenantAuthorizer::class)->allows(new User(['id' => 1, 'team_ids' => []]), $team))->toBeTrue();
 });
